@@ -1,0 +1,80 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>مافيا المغرب</title>
+<style>
+:root{--bg:#1a0f0f;--card:#2b1a1a;--red:#c1272d;--green:#006233;--gold:#e8b84a;--tx:#f5ecd9}
+*{box-sizing:border-box}body{margin:0;background:transparent;color:var(--tx);font-family:system-ui,sans-serif;padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom);min-height:100vh}
+h1{text-align:center;color:var(--gold);margin:14px 0}.card{background:rgba(43,26,26,.9);border-radius:14px;padding:12px;margin:10px 0}
+button,input{font:inherit;border-radius:10px;border:0;padding:12px;width:100%;margin:4px 0}
+button{background:var(--red);color:#fff;font-weight:700}button.g{background:var(--green)}button:disabled{opacity:.4}
+input{background:#fff;color:#000}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pl{background:#3a2424;border-radius:12px;padding:10px;text-align:center;border:2px solid transparent}.pl.dead{opacity:.35}.pl.sel{border-color:var(--gold)}
+.av{font-size:34px}.log{font-size:14px;line-height:1.7;max-height:140px;overflow:auto}.badge{color:var(--gold)}
+:root{--s1:#4f9fe0;--s2:#fbd9a0;--sil:#8a4a36;--win:#fff4c2;--winop:0;--sunop:1;--moonop:0;--stars:0}
+body.night{--s1:#040613;--s2:#1c2b63;--sil:#04050d;--winop:1;--sunop:0;--moonop:1;--stars:1}
+html{background:#1a0f0f}#bgs *{transition:opacity .8s}h1{background:rgba(0,0,0,.45);border-radius:12px;padding:6px}
+@keyframes tw{50%{opacity:.3}}.st circle{animation:tw 3s infinite}.st circle:nth-child(2n){animation-delay:1.2s}
+.pl svg{display:block;margin:0 auto}
+</style></head><body><h1>🇲🇦 مافيا المغرب</h1><svg id="bgs" viewBox="0 0 400 800" preserveAspectRatio="xMidYMax slice" style="position:fixed;inset:0;width:100%;height:100%;z-index:-1">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--s1)"/><stop offset="1" style="stop-color:var(--s2)"/></linearGradient></defs>
+<rect width="400" height="800" fill="url(#g)"/>
+<g class="st" fill="#fff" style="opacity:var(--stars)"><circle cx="40" cy="60" r="1.6"/><circle cx="150" cy="40" r="1.2"/><circle cx="230" cy="90" r="1.8"/><circle cx="300" cy="35" r="1.3"/><circle cx="360" cy="110" r="1.6"/><circle cx="60" cy="200" r="1.2"/><circle cx="200" cy="190" r="1.5"/><circle cx="340" cy="230" r="1.2"/><circle cx="120" cy="290" r="1.4"/><circle cx="270" cy="310" r="1.3"/></g>
+<circle cx="320" cy="140" r="36" fill="#ffd36b" style="opacity:var(--sunop)"/>
+<path d="M90 100a30 30 0 1 0 22 52a24 24 0 1 1-22-52z" fill="#f4efd8" style="opacity:var(--moonop)"/>
+<g style="fill:var(--sil)"><rect x="0" y="640" width="95" height="160"/><rect x="95" y="600" width="35" height="200"/><rect x="130" y="470" width="40" height="330"/><rect x="136" y="448" width="28" height="22"/><path d="M142 448q8-24 16 0z"/><rect x="149" y="408" width="2" height="30"/><path d="M170 640q37-64 74 0v160h-74z"/><rect x="244" y="600" width="72" height="200"/><rect x="316" y="660" width="84" height="140"/>
+<path d="M344 800q-8-90 4-160" stroke="var(--sil)" stroke-width="6" fill="none"/><path d="M348 640q-40-10-62 20M348 640q-12-40-52-40M348 640q30-30 62-8M348 640q12-42 52-30" stroke="var(--sil)" stroke-width="5" fill="none"/></g>
+<g style="fill:var(--win);opacity:var(--winop)"><rect x="20" y="670" width="8" height="12"/><rect x="60" y="690" width="8" height="12"/><rect x="104" y="640" width="8" height="12"/><rect x="144" y="520" width="8" height="14"/><rect x="144" y="580" width="8" height="14"/><rect x="204" y="700" width="10" height="14"/><rect x="262" y="640" width="8" height="12"/><rect x="290" y="690" width="8" height="12"/><rect x="332" y="710" width="8" height="12"/></g></svg><div id="app" style="padding-bottom:70px"></div><div id="cb" style="display:none;position:fixed;bottom:0;left:0;right:0;gap:6px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:#000"><input id="ci" placeholder="💬 رسالة..." maxlength="120" onkeydown="if(event.key==='Enter')sendChat()"><button style="width:90px" onclick="sendChat()">إرسال</button></div>
+<script>
+const SK={default:['🧑','عادي',0],fez:['🎩','الطربوش',120],don:['🕴️','الدون',100],tangia:['🍲','الطنجية',150],sahraoui:['🧣','الصحراوي',200]};
+const RN={sniper:'قناص 🎯',mafia:'مافيا 🔪',doctor:'طبيب 🩺',detective:'محقق 🔍',citizen:'مواطن 🏘️'};
+let S=null,T=localStorage.t||'',BASE=localStorage.base||'',es=null,tab='home';
+const $=id=>document.getElementById(id);
+const api=(p,o)=>fetch(BASE+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({t:T,...o})}).then(r=>r.json());
+function connect(){if(es)es.close();fetch(BASE+'/api/state?t='+T).then(r=>r.json()).then(x=>{if(x.error==='auth'){localStorage.removeItem('t');T='';S=null;render()}}).catch(()=>{});es=new EventSource(BASE+'/events?t='+T);fetch(BASE+'/api/top').then(r=>r.json()).then(x=>{LB=x;if(S&&S.lobby)render()}).catch(()=>{});es.onmessage=e=>{S=JSON.parse(e.data);const k=S.phase?S.phase+S.day:'';if(k&&k!==PK){beep(S.phase==='night'?220:S.phase==='over'?660:440)}PK=k;render()};es.onerror=()=>{}}
+async function login(){const r=await fetch(BASE+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:$('n').value,pin:$('p').value})}).then(r=>r.json()).catch(()=>({error:'net'}));
+ if(!r.t){$('err').textContent=r.error==='taken'?'الاسم مستعمل أو الرمز خاطئ':'تعذر الاتصال بالخادم';return}T=r.t;localStorage.t=T;connect()}
+function setBase(){BASE=$('b').value.replace(/\/$/,'');localStorage.base=BASE}
+/*ART*/
+function av(k,dead,z){z=z||56;const sk='#d9a066',B='<path d="M6 64c0-14 11-19 26-19s26 5 26 19z" fill="',
+ e=dead?'<path d="M24 26l6 6m0-6l-6 6M34 26l6 6m0-6l-6 6" stroke="#222" stroke-width="2" stroke-linecap="round"/>':'<circle cx="27" cy="29" r="2" fill="#222"/><circle cx="37" cy="29" r="2" fill="#222"/>',
+ m='<path d="M28 36q4 3 8 0" stroke="#7a3b2e" stroke-width="1.6" fill="none" stroke-linecap="round"/>',f='<circle cx="32" cy="29" r="14" fill="'+sk+'"/>';
+ const T={default:B+'#2a6f97"/>'+f+'<path d="M18 27c-2-14 26-14 28 0-7-6-21-6-28 0z" fill="#3b2314"/>'+e+m,
+ don:B+'#1b1b1f"/><path d="M26 45l6 10 6-10z" fill="#fff"/><path d="M31 47h2l1 12-2 3-2-3z" fill="#b3202a"/>'+f+(dead?e:'<rect x="21" y="26" width="9" height="6" rx="2" fill="#111"/><rect x="34" y="26" width="9" height="6" rx="2" fill="#111"/><path d="M30 28h4" stroke="#111" stroke-width="1.5"/>')+m+'<ellipse cx="32" cy="19" rx="19" ry="4.5" fill="#111"/><path d="M21 19c0-12 3-14 11-14s11 2 11 14z" fill="#1b1b1f"/><path d="M21 17h22v3H21z" fill="#b3202a"/>',
+ tangia:B+'#b5541c"/>'+f+e+m+'<path d="M19 21c-2-12 4-16 13-16s15 4 13 16z" fill="#c1693c"/><rect x="17" y="19" width="30" height="4" rx="2" fill="#8a4420"/><circle cx="32" cy="4.5" r="2.6" fill="#8a4420"/>',
+ sahraoui:B+'#1c3f94"/>'+f+e+'<path d="M18 33c9 3 19 3 28 0v8c-6 8-22 8-28 0z" fill="#2748b8"/><path d="M16 24c0-14 32-14 32 0-8-4-24-4-32 0z" fill="#2748b8"/><path d="M17 20c10-4 20-4 30 2M18 24c9-3 19-3 28 0" stroke="#1c3f94" stroke-width="1.5" fill="none"/>',
+ fez:B+'#efe3c8"/>'+f+e+m+'<path d="M22 21L25 6h14l3 15z" fill="#b3202a"/><rect x="21" y="19" width="22" height="3" fill="#8f1820"/><path d="M39 7q9 1 6 13" stroke="#111" stroke-width="1.6" fill="none"/>'};
+ return '<svg viewBox="0 0 64 64" width="'+z+'" height="'+z+'" style="'+(dead?'filter:grayscale(1)':'')+'">'+(T[k]||T.default)+'</svg>'}
+/*ENDART*/
+let sel=null,LB=[],PK='',AC;
+function beep(f){try{AC=AC||new AudioContext();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.value=.1;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.15);navigator.vibrate&&navigator.vibrate(80)}catch(e){}}
+function sendChat(){const i=$('ci');if(!i.value.trim())return;api('/api/chat',{text:i.value});i.value=''}
+function chatHtml(){const n=S.phase==='night';return `<div class="card log"><b>${n?'🔒 دردشة المافيا':'💬 الدردشة'}</b>${(S.chat||[]).map(x=>'<div><span class="badge">'+esc(x.n)+':</span> '+esc(x.m)+'</div>').join('')}</div>`}
+function esc(t){return String(t).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function render(){const a=$('app');$('cb').style.display=(T&&S&&!S.lobby)?'flex':'none';document.body.className=S&&S.phase==='night'?'night':'';
+ if(!T){a.innerHTML=`<div class="card"><input id="n" placeholder="اسم اللاعب"><input id="p" placeholder="رمز سري (اختياري)" type="password"><input id="b" placeholder="عنوان الخادم (للتطبيق)" value="${BASE}" onchange="setBase()"><button onclick="setBase();login()">دخول</button><div id="err" style="color:#f88"></div></div>`;return}
+ if(!S){a.innerHTML='<div class="card">جاري الاتصال...</div>';return}
+ if(S.lobby)return home(a);
+ if(S.phase==='lobby')return lobby(a);game(a)}
+function home(a){const m=S.me;
+ a.innerHTML=`<div class="card">👤 ${esc(m.name)} · 🪙 ${m.coins} · 🏆 ${m.wins}/${m.games}</div>
+ <button class="g" onclick="api('/api/join',{})">🎮 ابدأ لعبة</button>
+ <div class="card"><b>🛍️ المتجر والسكينات</b>${Object.entries(SK).map(([k,[e,n,pr]])=>`<div class="grid" style="margin:6px 0;align-items:center"><div>${av(k,0,40)} ${n}</div>${
+ m.skins.includes(k)?`<button ${m.skin===k?'disabled':''} onclick="api('/api/equip',{skin:'${k}'}).then(refresh)">${m.skin===k?'مُفعّل':'تفعيل'}</button>`:`<button onclick="api('/api/buy',{skin:'${k}'}).then(refresh)">شراء 🪙${pr}</button>`}</div>`).join('')}</div>
+ <div class="card"><b>🏅 المتصدرون</b>${LB.map((x,i)=>`<div>${i+1}. ${esc(x.name)} — ${x.wins} فوز / ${x.games}</div>`).join("")||"لا أحد بعد"}</div>
+ <button onclick="localStorage.clear();location.reload()" style="background:#444">خروج</button>`}
+function refresh(){connect()}
+function lobby(a){const h=S.me.host;a.innerHTML=`<div class="card">غرفة ${S.room} · اللاعبون: ${S.players.length}/8<br>${S.players.map(p=>av(p.skin,0,28)+' '+esc(p.name)).join('<br>')}<br><small>تُملأ المقاعد الشاغرة بروبوتات</small></div>${chatHtml()}
+ ${h?'<button class="g" onclick="api(\'/api/start\',{})">▶️ ابدأ المباراة</button>':'<div class="card">بانتظار المضيف...</div>'}<button onclick="api(\'/api/leave\',{})" style="background:#444">رجوع</button>`}
+function game(a){const m=S.me,night=S.phase==='night',over=S.phase==='over';
+ const can=!over&&m.alive&&!m.done&&(!night||(m.role!=='citizen'&&!(m.role==='sniper'&&m.used))),skipOk=can&&night&&m.role==='sniper',INFO={mafia:'اقتل مواطناً كل ليلة دون أن تُكشف',doctor:'احمِ لاعباً من القتل كل ليلة',detective:'اكشف هوية لاعب كل ليلة',sniper:'رصاصة واحدة: أصب مافيا وإلا متّ ندماً',citizen:'اكشف المافيا بالتصويت'};
+ const hint=over?(S.winner==='mafia'?'فازت المافيا':'فاز المواطنون'):!m.alive?'أنت خارج اللعبة 👻':m.done?'تم اختيارك ✅ انتظر...':night?({mafia:'اختر ضحية',doctor:'اختر من تنقذه',detective:'اختر من تحقق منه',citizen:'نم بسلام 😴',sniper:m.used?'استخدمت رصاصتك 😴':'اختر هدفاً لرصاصتك أو تخطَّ'})[m.role]:'صوّت لطرد مشتبه به';
+ a.innerHTML=`<div class="card">${night?'🌙 الليل':'☀️ النهار'} ${S.day} · دورك: <span class="badge">${RN[m.role]||'?'}</span> · <span id="tm"></span><br>${hint}${S.note?'<br><b>'+S.note+'</b>':''}<br><small>${INFO[m.role]||''}</small></div>
+ <div class="grid">${S.players.map(p=>`<div class="pl ${p.alive?'':'dead'} ${sel===p.id?'sel':''}" onclick="pickp('${p.id}')"><div class="av">${av(p.skin,!p.alive,58)}</div>${esc(p.name)}<br><small>${p.role?RN[p.role]:''}</small></div>`).join('')}</div>
+ ${can?`<button onclick="go()" ${sel?'':'disabled'}>${night?'تأكيد':'تصويت'}</button>`:''}${skipOk?`<button onclick="sel='__skip';go()" style="background:#555">تخطَّ (لا أطلق)</button>`:''}
+ ${chatHtml()}
+ <div class="card log">${S.log.map(l=>'<div>'+l+'</div>').join('')}</div>
+ ${over?'<button class="g" onclick="api(\'/api/leave\',{})">القائمة الرئيسية</button>':''}`}
+function pickp(id){const p=S.players.find(x=>x.id===id);if(p.alive&&id!==S.me.id){sel=id;render()}}
+async function go(){const r=await api('/api/act',{target:sel});sel=null;if(r.error)alert('اختيار غير صالح')}
+setInterval(()=>{const e=$('tm');if(e&&S&&S.deadline&&S.phase!=='over')e.textContent='⏱ '+Math.max(0,Math.round((S.deadline-Date.now())/1000))},500);
+if(T)connect();render();
+</script></body></html>
